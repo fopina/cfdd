@@ -14,9 +14,12 @@ clean:
 
 build:
 	@mkdir -p dist
-	@CGO_ENABLED=$(CGO) go build -ldflags "-w -s -X main.version=${VERSION} -X main.date=$(shell date +'%y.%m.%dT%H:%M:%S')" \
+	@CGO_ENABLED=$(CGO) go build -ldflags "-w -s -X main.version=${VERSION} -X main.date=$(shell date +'%Y-%m-%dT%H:%M:%S')" \
 	                             -o $(OUTPUT_FILE) \
 								 main.go
 
 release:
 	@VERSION=$(VERSION) goreleaser --skip-publish --snapshot --rm-dist
+
+docker:
+	@VERSION=$(VERSION) docker build --build-arg VERSION=${VERSION} -t fopina/cfdd:${VERSION} .
