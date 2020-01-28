@@ -3,8 +3,10 @@ package main
 import (
 	"context"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net"
+	"strings"
 	"time"
 
 	"github.com/fopina/cfdd/cfapi"
@@ -41,7 +43,7 @@ func main() {
 	flag.StringVarP(&options.Domain, "domain", "d", "", "Domain (or Zone) that the record is part of")
 	flag.StringVarP(&options.Record, "record", "r", "", "Record to be updated")
 	flag.StringVarP(&options.Email, "email", "e", "", "Email for authentication")
-	flag.StringVarP(&options.Token, "token", "t", "", "API token for authentication")
+	flag.StringVarP(&options.Token, "token", "t", "", "API token for authentication - use @/path/to/file to read it from a file instead")
 	flag.IntVarP(&options.PollInterval, "polling", "p", 0, "Number of seconds between each check for external IP (use 0 to run only once)")
 	helpPtr := flag.BoolP("help", "h", false, "this")
 
@@ -55,6 +57,14 @@ func main() {
 	if *versionPtr {
 		fmt.Println("Version: " + version + " (built on " + date + ")")
 		return
+	}
+
+	if strings.HasPrefix(options.Token, "@") {
+		b, err := ioutil.ReadFile(options.Token[1:])
+		if err != nil {
+			log.Fatal(err)
+		}
+		options.Token = strings.TrimSpace(string(b))
 	}
 
 	client := cfapi.NewCFClient(options.Email, options.Token)
