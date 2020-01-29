@@ -75,6 +75,9 @@ func main() {
 	}
 
 	record, err := client.FindRecordByName(zone.ID, options.Record)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	if record.Type != "A" {
 		log.Fatalf("%v does not have a valid record type", record)

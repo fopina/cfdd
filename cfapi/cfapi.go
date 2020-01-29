@@ -67,13 +67,18 @@ func (c *cfclient) FindZoneByName(name string) (*cfzone, error) {
 	var zoneResult struct {
 		Result  []cfzone
 		Success bool
+		Errors  []interface{}
 	}
 	err = json.Unmarshal(body, &zoneResult)
 	if err != nil {
 		return nil, err
 	}
 	if !zoneResult.Success {
-		return nil, fmt.Errorf("failed to find zone for domain %v", name)
+		return nil, fmt.Errorf("failed to find zone for domain %v - %v", name, zoneResult.Errors)
+	}
+
+	if len(zoneResult.Result) == 0 {
+		return nil, fmt.Errorf("zone %v not found", name)
 	}
 
 	return &zoneResult.Result[0], nil
@@ -93,13 +98,18 @@ func (c *cfclient) FindRecordByName(zone string, name string) (*cfrecord, error)
 	var recordResult struct {
 		Result  []cfrecord
 		Success bool
+		Errors  []interface{}
 	}
 	err = json.Unmarshal(body, &recordResult)
 	if err != nil {
 		return nil, err
 	}
 	if !recordResult.Success {
-		return nil, fmt.Errorf("failed to find record %v for zone %v", name, zone)
+		return nil, fmt.Errorf("failed to find record %v for zone %v - %v", name, zone, recordResult.Errors)
+	}
+
+	if len(recordResult.Result) == 0 {
+		return nil, fmt.Errorf("record %v not found for zone %v", name, zone)
 	}
 
 	return &recordResult.Result[0], nil
