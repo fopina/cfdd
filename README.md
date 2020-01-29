@@ -1,4 +1,9 @@
 # cfdd
+[![Go Report Card](https://goreportcard.com/badge/github.com/fopina/cfdd)](https://goreportcard.com/report/github.com/fopina/cfdd)
+![release](https://github.com/fopina/cfdd/workflows/release/badge.svg)
+[![Pulls](https://img.shields.io/docker/pulls/fopina/cfdd.svg)](https://hub.docker.com/r/fopina/cfdd)
+[![Layers](https://images.microbadger.com/badges/image/fopina/cfdd.svg)](https://hub.docker.com/r/fopina/cfdd)
+
 Dynamic DNS updater for Cloudflare
 
 cfdd monitors your external IP and updates an A record in your cloudflare account when it changes.
